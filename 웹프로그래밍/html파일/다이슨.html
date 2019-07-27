@@ -1,0 +1,121 @@
+﻿<html>
+<head>
+<style type="text/css">
+	audio{text-align:left;}
+	header{background-color: LightSteelBlue; text-align: center; position: relative;}
+	header img{margin:10px;}
+	nav{background-color: LightSteelBlue;text-align: center; position: relative; padding:10px;}
+	footer{background-color: LightSteelBlue; text-align: center; position: relative; top: 200px;}
+	
+	article{text-align:center;position: relative; top: 80px;}
+	#cost{position: relative; top: 80px; text-align:center;}
+	#button{position: relative;}
+</style>
+<script type="text/javascript">
+	
+	var product_list = new Array("스위치","아이패드","나이키","s10","갤럭시폴드","그램","에어팟","픽시","다이슨","플스");
+
+	function find(tag){
+		var dom = document.getElementById(tag);
+		var flag = 0;
+		for(i=0;i<product_list.length;i++){
+			if(dom.value == product_list[i]){
+				flag = 1;
+				address = product_list[i]+".html";
+				location.href=address;
+			}
+		}
+		if(!flag){alert('검색 결과가 없습니다');}			
+	}
+	
+	function change(alt){
+		var dom1 = document.getElementById("pic");
+		dom1.src = alt;
+	}
+
+</script>
+</head>
+<body>
+<form method="post" action="buy.php" >
+
+<audio src ="브금.mp3" controls autoplay>
+ 브라우저가 오디오를 지원하지 않습니다
+</audio>
+
+<header>
+<a href="index.html"><img  src = "main.png" width = "100px" height ="100px"></a>
+<br>
+<input type="text" id = "search" size="80" >&nbsp;<input type="button" value="검색" onclick = "find('search');">
+</header>
+
+<nav>
+<br>
+<a href="a.html">공지사항</a>
+<a href="index.html">상품목록</a>
+<a href="주문확인.html">주문확인</a>
+<br>
+</nav>
+
+<div id ="page">
+<article id="buy">
+<table align="center">
+<tr>
+<td><img id ="pic" src ="다이슨.png" width = "200" height="400"></td>
+<td><img src ="다이슨.png" width = "50" height="100" onclick="change('다이슨.png');">
+</td>
+</tr>
+</table>
+<p>
+<br>
+주문비밀번호 
+<br>
+<input type="password" name="u_num" size="4">
+<br>
+상품명
+<select name="u_name" size="1" >
+    <option value=”다이슨v10” selected>다이슨 v10</option>
+</select>
+<br>
+가격
+<select name="u_price" size="1" >
+    <option value=”760000” selected>760000원</option>
+</select>
+<br>
+갯수
+<select name="u_count" size="1" >
+    <option value=”1” selected>1</option>
+    <option value=”2”>2</option>
+    <option value=”3”>3</option>
+    <option value=”4”>4</option>  
+    <option value=”5”>5</option>  
+</select>
+<br>
+색상
+<select name="u_color" size="1" >
+    <option value=”그레이” selected>그레이</option>
+</select>
+<br>
+배송할 주소
+<br>
+<textarea name="u_address" cols="30" rows="5"></textarea>
+</p>
+<br>
+<div id="button" align ="center">
+<input type="submit" value="구매">
+<input type="reset" value="취소">
+</div>
+</article>
+</div>
+
+<footer>
+<h6><hr></h6>
+<h6>Copyright © MOONJUNGHYUN. All Rights Reserved.</h6>
+<br>
+</footer>
+</form>
+</body>
+</html>
+
+
+
+

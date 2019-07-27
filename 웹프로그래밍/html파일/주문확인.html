@@ -1,0 +1,73 @@
+﻿<html>
+
+<head>
+<style type="text/css">
+	audio{text-align:left;}
+	header{background-color: LightSteelBlue; text-align: center; position: relative;}
+	header img{margin:10px;}
+	nav{background-color: LightSteelBlue;text-align: center; position: relative; padding:10px;}
+	footer{background-color: LightSteelBlue; text-align: center; position: relative; top: 200px;}
+	
+	article{text-align: center; position: relative; top: 100px;}
+	article table{text-align: center;}
+	
+	
+</style>
+<script type ="text/javascript">
+	
+	var product_list = new Array("스위치","아이패드","나이키","s10","갤럭시폴드","그램","에어팟","픽시","다이슨","플스");
+
+	function find(tag){
+		var dom = document.getElementById(tag);
+		var flag = 0;
+		for(i=0;i<product_list.length;i++){
+			if(dom.value == product_list[i]){
+				flag = 1;
+				address = product_list[i]+".html";
+				location.href=address;
+			}
+		}
+		if(!flag){alert('검색 결과가 없습니다');}			
+	}
+
+</script>
+</head>
+
+<body>
+<form method="post" action="check.php"> 
+
+<audio src ="브금.mp3" controls autoplay>
+ 브라우저가 오디오를 지원하지 않습니다
+</audio>
+
+<header>
+<a href="index.html"><img  src = "main.png" width = "100px" height ="100px"></a>
+<br>
+<input type="text" id = "search" size="80" >&nbsp;<input type="button" value="검색" onclick = "find('search');">
+</header>
+
+<nav>
+<br>
+<a href="a.html">공지사항</a>
+<a href="index.html">상품목록</a>
+<a href="주문확인.html">주문확인</a>
+<br>
+</nav>
+
+<article align = "center">
+주문번호를 입력하세요
+<br> 
+<input name="u_num" type="password" size="4">
+<input type="submit" value="확인">
+<input type="reset" value="취소">
+</article>
+
+<footer>
+<h6><hr></h6>
+<h6>Copyright © MOONJUNGHYUN. All Rights Reserved.</h6>
+<br>
+</footer>
+
+</form>
+</body>
+</html>
