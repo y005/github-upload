@@ -1,0 +1,152 @@
+캐쉬메모리의 한계 
+
+1.캐쉬메모리의 한정된 용량으로 메인메모리의 데이터와 
+그 위치까지 기억하고 있어야하므로 저장하는 데이터의
+양이 작아진다
+
+2.캐쉬메모리에 있는 데이터의 탐색은 속도를 느리게 한다
+
+=>지정된 공간에만 그 데이터를 저장한다
+
+-Direct Mapped Cache
+
+메인메모리1GB의 주소공간을 가르키기 위해선 30개의 비트가 필요하지만
+캐쉬메모리1KB는 10개의 비트만 있으므로
+(메모리의 뒤 10개의 자리수를 캐쉬메모리와 지정한다)
+
+각각 20개의 데이터는 같은 공간으로 저장할 수 있는 중복의 가능성 때문에
+=>flag 체크하여 데미지값인지 확인 
+=>tag 맞추기 
+
+miss면 그 캐쉬에 메인메모리를 write하고 가져온다
+hit면 바로 캐쉬에서 메모리를 가져온다
+
+1024(1GB)/8(1byte)=128 개의 block단위로 움직(블록 단위는 1바이트)
+
+메인메모리 block address = 전체 메모리/block의 개수
+캐쉬 역시 block단위로 적혀져 있다 
+
+저장할 수있는 캐쉬
+=메인 메모리의 블록 갯수%캐쉬의 블록 수
+
+-캐쉬에서 데이터를 읽기 위한 주소의 구조
+tag(판별을 위한 나머지 메인메모리의 주소값)+index(저장된 캐쉬 주소)
++blockoffset(블록의 사이즈(2의 n승)나눠진다)
+
+-캐쉬의 구조 
+(index)valid(1)+tag(20)+data(32)
+
+tag같은지 여부(subtract한 값을 NOR한 값)와 valid를 and 게이트의 소자로 연결하여 
+hit의 여부를 확인하고 맞으면 캐쉬메모리에 쓰인 data를 read
+아니면 그 주소의 메인메모리 값을 캐쉬메모리에 저장한다
+
+-블록의 사이즈 크기에 따른 변화
+
+블록의 사이즈가 크면(주소에 offset이 차지하는 부분이 증가)
+spatial locality로 인해 미스 확률을 줄어들게 하지만
+
+캐쉬의 사이즈는 고정적이므로 블록의 사이즈가 커지면
+그만큼 캐쉬의 최대 블록의 수는 줄어들게 되므로 
+많은 메모리에 대한 경쟁이 이루어지고 
+그로 인한 미스 페널티가 증가한다
+
+=>블록의 사이즈를 무작정 크게만 설계해선 안된다!!
+
+cpu는 히트를 전제하여 클럭의 속도를 설계한다
+(캐쉬메모리히트를 가장하고 lw를 설계하고 클럭의 주기를 설계하면
+주기를 빠르게 설계가 가능하게 한다)
+
++미스가 일어날 경우
+cpu가 미스 페널티가 일어나면 한 클럭 안으로 lw가 실행되지 X 
+=>data가 메모리에서 캐쉬로 올 때까지 버블 명령을 강제로 
+삽입하여 캐쉬메모리로 원하는 데이터값이 저장될 때 까지 대기
+(저장이 될 경우 히트의 경우로 명령어 다시 재개)
+
++Write의 경우
+
+Write-through
+캐쉬와 메인메모리에 대한 데이터값을 동일해야 된다는 원칙으로
+이득이 아니더라도 캐쉬에도(메인메모리에도) 그 값을 저장한다
+
+Write-back
+캐쉬에만 쓰기가 이루어지고 그 캐쉬자리에서 데이터가 쓰이지 않을 때 
+=>미스가 이뤄진 경우 메인메모리까지 쓰기가 이루어진다
+(미스가 일어날 때는 cpu는 쉬고있으므로 이 시간에 메인메모리에 수정할 수 있는 장점을 가짐)
+더티비트 1이면 메인메모리에도 캐쉬메모리에 있는 데이터값으로 저장한다
+(메인메모리와 캐쉬메모리의 다른지 판별 flag bit)
+
+Write-allocation
+
+캐쉬메모리의 성능
+(평균적인 계산 시간)
+=이상적인 CPI(cycle per instruction)+미스 패널티*미스확률*메모리의 접근과 연관된 명령어이 전체 프로그램에서 차지하는 비중
+
+I-cache 1*miss penalty*miss ratio
+(I-cache에서는 instruction을 fetch해오는 lw 작업만 이루어지기 때문)
+
+D-cache (lw||sw)*miss penalty*miss ratio
+
+명령어값 접근은 대체적으로 성공한다 
+데이터값 접근은 실패할 확률이 높다
+
+Set associative 
+저장할 수 있는 캐쉬메모리의 주소가 늘어나지만 
+늘어난 만큼 원하는 데이터를 탐색하는데 시간이 
+오래걸린다
+=>tag를 확인하여 구별한다(캐쉬인덱스는 줄어들고 
+    태그는 늘어난다)
+ex) 캐쉬 블록이 1024개라고 하면 10비트는 인덱스이고 
+     tag는 나머지비트(10+2비트를 제외한 나머지)를 나타낸다	
+     4블록을 1개의 set으로 설정하면 8비트가 인덱스가 되고 나
+     줄어든 2비트는 태그비트로 늘어나게 된다 
+=>한번에 탐색할 수 있는 회로 설계가 필요하다
+    허용하는 주소의 수를 타협해야 한다
+    set number로 지정한다(블록 주소과는 별개 블록을 또 묶은 단위)
+
+Memory hierarchy(temporal locality를 이용한 메모리설계)
+
+1.block placement&find block
+
+ direct associativity
+-미스레이트가 높다 
+-태그 비교는 한번
+
+ n-way associativity
+-태그비교는 같은 인덱스인 n개의 캐쉬메모리들과 
+ 비교하므로 n번
+
+ Fully associativity
+-미스레이트는 낮아지지만 일반적인 비용문제는 증가
+-모든 캐쉬메모리들을 탐색해야 한다
+
+2.Replacement
+ lru(least recently used)(복잡하고 비용적 문제)
+ random(lru와 성능이 비슷하다)
+
+3.Write Policy
+ Write-through
+?Update both upper and lower levels
+?Simplifies replacement, but may require write buffer
+ Write-back
+?Update upper level only
+?Update lower level when block is replaced
+?Need to keep more state(더티비트)
+
+
+4.Sources of Misses
+ Compulsory misses (aka cold start misses)
+?First access to a block
+ Capacity misses
+?Due to finite cache size
+?A replaced block is later accessed again
+ Conflict misses (aka collision misses)
+?In a non-fully associative cache
+?Due to competition for entries in a set
+?Would not occur in a fully
+
+캐쉬메모리 디자인
+-캐쉬메모리 용량을 늘리면 Capacity misses는 줄지만 접근시간이 늘어난다
+-set의 블록수를 늘리면 Conflict misses는 줄지만 접근시간이 늘어난다
+ (추가적인 태그비교)
+-블록 자체의 크기를 늘리면 Compulsory misses(초기 미스)줄지만 
+ 오히려 미스 패널티와 경쟁 늘어난다

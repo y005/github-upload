@@ -1,0 +1,17 @@
+cpu control
+
+op코드(6비트)를 보고 만들어낸 값
+=>alu op+alu function을 결정한다
+
+lw,sw는 aluop = 00
+branch는 aluop = 01
+r-format은 aluop = 10+function
+
+lw의 경우는 레지스터에다 저장을 해야됨으로 
+추가적인 mux를 추가하여 이 경우에만 한해서 
+write register에도 추가된다  
+
+control에 opcode를 참고하여 alu op를 출력
+
+alu control은 alu op를 참고하여 추가적인 +function코드를 
+보낸다 (r-format인 경우)

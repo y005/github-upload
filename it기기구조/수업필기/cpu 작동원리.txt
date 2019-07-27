@@ -1,0 +1,81 @@
+1.add instruction 작동예시
+
+add $t0 $t1 $t2
+
+pc 주소값 32비트
+
+=>명령어 32비트
+    (r-format)
+
+=>레지스터 3개 - 15비트(각각 5비트)
+    컨트롤 - 12비트(op/function)
+
++밑 회로
+i-format에 해당하는 16비트를 무조건 보낸다
+r-format에서는 쓰레기값(의미가 없다)
+
+=>mux가 선택한  두 개의 레지스터값을 alu인자로 들어옴 
+
+=>alu의 결과값과 그 결과값의 위치에서 읽어온 
+    메모리값 중 원하는 연산값을 mux가 선택하여 
+    레지스터에 저장한다 
+    (mux는 instruction의 포맷에 따라 각각의 
+    유의미한 값을 선택한다)
+
+2. load word instruction 작동예시
+
+lw $t0 $t1(4)
+
+pc 주소값 32비트
+
+=>명령어 32비트
+    (i-format)
+
+=>레지스터 5비트 2개
+    
++밑 회로의 16비트에는 constant가 입력된 뒤 32비트로 
+   sign extension한다
+
+=>메모리 주소값 연산을 위해 constant는 레지스터의 입력
+    값과 함께 alu로 입력된다
+
+=>앞의 6비트값을 읽어서 i-format형식인 것을 알아내면
+    mux에서는 연산된 메모리 주소값만을 선택하여 내보낸다
+
+=>선택된 주소값의 메모리에서 저장된 값을 읽어온다 
+    (memory read는 캐쉬에 영향을 주므로 read control 라인 필요)
+
+=>alu의 결과값과 그 결과값의 위치에서 읽어온 
+    메모리값 중 원하는 메모리값을 mux가 선택하여 
+    레지스터에 저장한다 
+    (mux는 instruction의 포맷에 따라 각각의 
+    유의미한 값을 선택한다)
+ 
+3. beq instruction 작동예시
+ 
+beq $t0 $t1 address(16비트)
+
+=>16비트를 32비트로 sign-extension한 뒤 sll하고 
+    pc+4와 alu에 보내진다(명령어 주소값 연산)
+
+=>zero detector (subtraction의 값이 0이면 1을 보낸다)
+    -0인 경우 pc+4가 mux에서 선택되어 다음 명령어를 읽는다 
+    -1인 경우 계산된 명령어주소값이 mux에서 선택하여 원하는 
+      instruction으로 이동한다
+
++zero detector
+: nor연산을 이용해 모든 subtract의 모든 비트가 다 0일 때만 1을 가진다 
+
+4. jump instruction 작동 예시
+
+jump address(26비트)
+
+address가 2비트 sll된 후 pc+4의 앞 4자리의 값으로 덮어준 주소값이
+먹스에서 선택되면 입력된 명령어의 주소값으로 명령어를 읽는다
+
+
+
+
+
+
+

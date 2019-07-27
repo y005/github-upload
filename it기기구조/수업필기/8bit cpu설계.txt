@@ -1,0 +1,50 @@
+1.CONTROL LINE
+6가지 입력에 대한 컨트롤라인의 출력값을 설계
+
+r-format과 lw,sw,beq에 대한 출력값만 고려
+
++나머지 60가지의 출력에 대한 것은 고려하지 않는다
+
+입력
+lw        100011  
+sw        101011 
+beq       000100
+r-format  000000
+
+출력
+	regdst | alusrc | memtoReg | regWrite | MemRead | MemWrite | Branch | Aluop1 | Aluop0
+lw              1         0           0               1               0               0             0          1          0
+sw              0         1           1               1               1               0             0          0          0
+beq   	   X         1           X               0               0               1             0          0          0
+r-format      X         0           X               0               0               0             1          0          1
+
+
+2.ALU CONTROL
+
+컨트롤 라인에서 나온 op값에 대한 출력값을 설계
+
+입력
+lw        00xxxxxx  
+sw        00xxxxxx 
+beq       01xxxxxx 
+
+r-format  
+-add      10100000
+-sub      10100010
+-and      10100100
+-or        10100101
+
+출력
+lw    0010 
+sw    0010 
+beq  0110 
+
+r-format 
+-add   0010
+-sub   0110
+-AND 0000
+-OR   0001
+
+3.ALU
+
+4.REGISTER READ&WRITE

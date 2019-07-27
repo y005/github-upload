@@ -1,0 +1,8 @@
+
+mttf:문제상황에 있기 전까지 걸리는 시간
+mttr:문제 상황에 있다가 정상으로 복귀되는 시간
+
+문제 상황에서 복귀까지의 시간
+mtbf = mttf+mttr
+
+avail = mttf(높이거나) /mttf+mttr(낮추거나)
